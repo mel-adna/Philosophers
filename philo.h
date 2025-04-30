@@ -6,13 +6,15 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 10:17:23 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/04/30 10:47:53 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/04/30 11:32:50 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
+# include <unistd.h>
 # include <stdio.h>
+# include <pthread.h>
 
 #endif
