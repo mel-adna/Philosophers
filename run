@@ -1,2 +1,5 @@
 #!/bin/bash
 gcc main.c -o app && ./app
+
+
+# make fclean  && make && ./philo 5 800 200 200 5
