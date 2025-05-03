@@ -50,7 +50,7 @@ void	print_status(t_philo *philo, char *msg)
 	pthread_mutex_lock(&philo->data->write);
 	if (!philo->data->dead)
 	{
-		printf("%llu %d %s\n", get_time() - philo->data->start_time, philo->id,
+		printf("%lu %d %s\n", get_time() - philo->data->start_time, philo->id,
 			msg);
 	}
 	pthread_mutex_unlock(&philo->data->write);
@@ -58,28 +58,23 @@ void	print_status(t_philo *philo, char *msg)
 
 int	is_dead(t_data *data)
 {
-	int	i;
-
-	i = 0;
-	while (i < data->philo_num)
-	{
-		if (data->philos[i].time_to_die <= get_time())
-		{
-			data->dead = 1;
-			return (1);
-		}
-		i++;
-	}
-	return (0);
+    pthread_mutex_lock(&data->lock);
+    if (data->dead)
+    {
+        pthread_mutex_unlock(&data->lock);
+        return (1);
+    }
+    pthread_mutex_unlock(&data->lock);
+    return (0);
 }
 
 int	is_full(t_philo *philo)
 {
-	if (philo->data->meals_nb > 0 && philo->eat_count >= philo->data->meals_nb)
-	{
-		philo->status = FINISHED;
-		return (1);
-	}
-	printf("Philo %d entered loop\n", philo->id);
-	return (0);
+    if (philo->data->meals_nb > 0 && philo->eat_count >= philo->data->meals_nb)
+    {
+        philo->status = FINISHED;
+        return (1);
+    }
+    // Remove debug print
+    return (0);
 }

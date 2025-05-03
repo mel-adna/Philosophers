@@ -4,6 +4,7 @@
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdint.h>  // Add this include for uint64_t
 # include <sys/time.h>
 # include <unistd.h>
 
@@ -60,5 +61,7 @@ int						check_input(int ac, char **av);
 void					parse_args(int ac, char **av, t_data *data);
 int						is_dead(t_data *data);
 int						is_full(t_philo *philo);
+int						wait_threads(t_data *data);
+void					free_resources(t_data *data);
 
 #endif

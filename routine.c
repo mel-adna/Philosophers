@@ -5,15 +5,12 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	printf("Philo %d thread started\n", philo->id);
 	if (pthread_create(&philo->supervisor, NULL, &supervisor, philo) != 0)
 		return (NULL);
-	printf("Philo %d: is_dead = %d, is_full = %d\n", 
-       philo->id, is_dead(philo->data), is_full(philo));
+	if (philo->id % 2 == 0)
+		usleep(1000);
 	while (!is_dead(philo->data) && !is_full(philo))
 	{
-		printf("Philo %d inside main loop\n", philo->id);
-		usleep(10000);
 		print_status(philo, "is thinking");
 		pthread_mutex_lock(philo->l_fork);
 		print_status(philo, "has taken a fork");
@@ -27,6 +24,7 @@ void	*routine(void *arg)
 	}
 	return (NULL);
 }
+
 void	start_eating(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->lock);

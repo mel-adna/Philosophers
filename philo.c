@@ -43,17 +43,50 @@ int	check_input(int ac, char **av)
 int	main(int ac, char **av)
 {
 	t_data	data;
-	int		i;
+	// Remove the unused variable 'i'
 
-	printf("Checking input...\n");
 	if (!check_input(ac, av))
 		return (printf("Invalid input\n"), 1);
-	printf("Input OK\n");
 	parse_args(ac, av, &data);
 	if (init_mutexes(&data) || init_philos(&data) || start_threads(&data))
+	{
+		free_resources(&data);
 		return (printf("Initialization error\n"), 1);
-	i = 0;
-	while (i < data.philo_num)
-		pthread_join(data.philos[i++].t1, NULL);
+	}
+	
+	wait_threads(&data);
+	
+	free_resources(&data);
 	return (0);
+}
+
+// Add this resource cleanup function
+void	free_resources(t_data *data)
+{
+	int	i;
+	
+	if (data->philos != NULL)
+	{
+		i = 0;
+		while (i < data->philo_num)
+		{
+			pthread_mutex_destroy(&data->philos[i].lock);
+			i++;
+		}
+		free(data->philos);
+	}
+	
+	if (data->forks != NULL)
+	{
+		i = 0;
+		while (i < data->philo_num)
+		{
+			pthread_mutex_destroy(&data->forks[i]);
+			i++;
+		}
+		free(data->forks);
+	}
+	
+	pthread_mutex_destroy(&data->write);
+	pthread_mutex_destroy(&data->lock);
 }
