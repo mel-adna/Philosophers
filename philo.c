@@ -43,7 +43,6 @@ int	check_input(int ac, char **av)
 int	main(int ac, char **av)
 {
 	t_data	data;
-	// Remove the unused variable 'i'
 
 	if (!check_input(ac, av))
 		return (printf("Invalid input\n"), 1);
@@ -53,18 +52,15 @@ int	main(int ac, char **av)
 		free_resources(&data);
 		return (printf("Initialization error\n"), 1);
 	}
-	
 	wait_threads(&data);
-	
 	free_resources(&data);
 	return (0);
 }
 
-// Add this resource cleanup function
 void	free_resources(t_data *data)
 {
 	int	i;
-	
+
 	if (data->philos != NULL)
 	{
 		i = 0;
@@ -75,7 +71,6 @@ void	free_resources(t_data *data)
 		}
 		free(data->philos);
 	}
-	
 	if (data->forks != NULL)
 	{
 		i = 0;
@@ -86,7 +81,6 @@ void	free_resources(t_data *data)
 		}
 		free(data->forks);
 	}
-	
 	pthread_mutex_destroy(&data->write);
 	pthread_mutex_destroy(&data->lock);
 }

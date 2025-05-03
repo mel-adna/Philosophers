@@ -2,9 +2,9 @@
 # define PHILO_H
 
 # include <pthread.h>
+# include <stdint.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <stdint.h>  // Add this include for uint64_t
 # include <sys/time.h>
 # include <unistd.h>
 
