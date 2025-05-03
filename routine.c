@@ -2,27 +2,53 @@
 
 void	*routine(void *arg)
 {
-	t_philo	*philo;
+    t_philo	*philo;
+    int     supervisor_created = 0;
 
-	philo = (t_philo *)arg;
-	if (pthread_create(&philo->supervisor, NULL, &supervisor, philo) != 0)
-		return (NULL);
-	if (philo->id % 2 == 0)
-		usleep(1000);
-	while (!is_dead(philo->data) && !is_full(philo))
-	{
-		print_status(philo, "is thinking");
-		pthread_mutex_lock(philo->l_fork);
-		print_status(philo, "has taken a fork");
-		pthread_mutex_lock(philo->r_fork);
-		print_status(philo, "has taken a fork");
-		start_eating(philo);
-		pthread_mutex_unlock(philo->r_fork);
-		pthread_mutex_unlock(philo->l_fork);
-		print_status(philo, "is sleeping");
-		my_usleep(philo->data->sleep_time);
-	}
-	return (NULL);
+    philo = (t_philo *)arg;
+    
+    // Special case for single philosopher
+    if (philo->data->philo_num == 1)
+    {
+        print_status(philo, "has taken a fork");
+        my_usleep(philo->data->death_time);
+        print_status(philo, "died");
+        pthread_mutex_lock(&philo->data->lock);
+        philo->data->dead = 1;
+        pthread_mutex_unlock(&philo->data->lock);
+        return (NULL);
+    }
+    
+    // Create supervisor thread for normal case
+    if (pthread_create(&philo->supervisor, NULL, &supervisor, philo) == 0)
+        supervisor_created = 1;
+    else
+        return (NULL); // Exit if supervisor creation fails
+        
+    // Stagger even philosophers
+    if (philo->id % 2 == 0)
+        usleep(1000);
+        
+    // Main philosopher routine
+    while (!is_dead(philo->data) && !is_full(philo))
+    {
+        print_status(philo, "is thinking");
+        pthread_mutex_lock(philo->l_fork);
+        print_status(philo, "has taken a fork");
+        pthread_mutex_lock(philo->r_fork);
+        print_status(philo, "has taken a fork");
+        start_eating(philo);
+        pthread_mutex_unlock(philo->r_fork);
+        pthread_mutex_unlock(philo->l_fork);
+        print_status(philo, "is sleeping");
+        my_usleep(philo->data->sleep_time);
+    }
+    
+    // Only join supervisor if we created it
+    if (supervisor_created)
+        pthread_join(philo->supervisor, NULL);
+        
+    return (NULL);
 }
 
 void	start_eating(t_philo *philo)

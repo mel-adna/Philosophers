@@ -64,24 +64,31 @@ int	init_philos(t_data *data)
 int	start_threads(t_data *data)
 {
     int	i;
+    pthread_t monitor_thread;
 
     data->start_time = get_time();
     i = 0;
     while (i < data->philo_num)
     {
-        // Initialize time_to_die for each philosopher
         data->philos[i].time_to_die = get_time() + data->death_time;
-        // Remove debug print
         if (pthread_create(&data->philos[i].t1, NULL, routine,
                 &data->philos[i]) != 0)
             return (1);
-        usleep(100); // Small delay to prevent race conditions
+        usleep(100);
         i++;
     }
+    
+    // Create a monitor thread if there are multiple philosophers
+    if (data->philo_num > 1 && data->meals_nb > 0)
+    {
+        if (pthread_create(&monitor_thread, NULL, monitor, data) != 0)
+            return (1);
+        pthread_detach(monitor_thread);
+    }
+    
     return (0);
 }
 
-// Add this function to join all threads
 int	wait_threads(t_data *data)
 {
     int	i;
@@ -91,8 +98,12 @@ int	wait_threads(t_data *data)
     {
         if (pthread_join(data->philos[i].t1, NULL) != 0)
             return (1);
-        if (pthread_join(data->philos[i].supervisor, NULL) != 0)
-            return (1);
+        // Only join supervisor threads if there's more than one philosopher
+        if (data->philo_num > 1)
+        {
+            if (pthread_join(data->philos[i].supervisor, NULL) != 0)
+                return (1);
+        }
         i++;
     }
     return (0);
