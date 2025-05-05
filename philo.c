@@ -7,6 +7,8 @@ int	is_digit_str(char *str)
 	i = 0;
 	if (!str || str[0] == '\0')
 		return (0);
+	if (str[i] == '+')
+		i++;
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')

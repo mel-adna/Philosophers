@@ -37,35 +37,45 @@ int	ft_atoi(const char *str)
 	return ((int)(result * sign));
 }
 
-void	my_usleep(uint64_t time_in_ms)
+void	my_usleep(t_data *data, uint64_t time_in_ms)
 {
 	uint64_t	start;
 
 	start = get_time();
-	while ((get_time() - start) < time_in_ms)
+	while ((get_time() - start) < time_in_ms && !is_dead(data))
 		usleep(100);
 }
 void	print_status(t_philo *philo, char *msg)
 {
-	pthread_mutex_lock(&philo->data->write);
+	static int	i = 0;
+
+	pthread_mutex_lock(&philo->data->write); // hanga hnaya
 	if (!philo->data->dead)
 	{
 		printf("%llu %d %s\n", get_time() - philo->data->start_time, philo->id,
 			msg);
+	}
+	else if (i != 1)
+	{
+		i++;
+		printf("%llu %d %s\n", get_time() - philo->data->start_time, philo->id,
+			"is died");
 	}
 	pthread_mutex_unlock(&philo->data->write);
 }
 
 int	is_dead(t_data *data)
 {
+	int	flag;
 	pthread_mutex_lock(&data->lock);
-	if (data->dead)
-	{
-		pthread_mutex_unlock(&data->lock);
-		return (1);
-	}
+	// if (data->dead)
+	// {
+	// 	pthread_mutex_unlock(&data->lock);
+	// 	return (1);
+	// }
+	flag = data->dead;
 	pthread_mutex_unlock(&data->lock);
-	return (0);
+	return (flag);
 }
 
 int	is_full(t_philo *philo)

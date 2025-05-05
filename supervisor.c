@@ -8,7 +8,7 @@ void	*supervisor(void *arg)
 	while (!is_dead(philo->data))
 	{
 		pthread_mutex_lock(&philo->lock);
-		if (!philo->eating && get_time() > philo->time_to_die)
+		if (!philo->eating && get_time() >= philo->time_to_die)
 		{
 			pthread_mutex_lock(&philo->data->lock);
 			if (!philo->data->dead)

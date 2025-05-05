@@ -48,7 +48,7 @@ typedef struct s_data
 
 int						ft_atoi(const char *str);
 uint64_t				get_time(void);
-void					my_usleep(uint64_t time);
+void					my_usleep(t_data *data, uint64_t time);
 void					print_status(t_philo *philo, char *msg);
 int						init_mutexes(t_data *data);
 int						init_philos(t_data *data);
