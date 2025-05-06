@@ -49,7 +49,7 @@ void	print_status(t_philo *philo, char *msg)
 {
 	static int	i = 0;
 
-	pthread_mutex_lock(&philo->data->write); // hanga hnaya
+	pthread_mutex_lock(&philo->data->write); 
 	if (!philo->data->dead)
 	{
 		printf("%llu %d %s\n", get_time() - philo->data->start_time, philo->id,
@@ -64,15 +64,27 @@ void	print_status(t_philo *philo, char *msg)
 	pthread_mutex_unlock(&philo->data->write);
 }
 
+// void	print_status(t_philo *philo, char *msg)
+// {
+// 	uint64_t	timestamp;
+
+// 	timestamp = get_time() - philo->data->start_time;
+// 	pthread_mutex_lock(&philo->data->write);
+// 	if (!is_dead(philo->data))
+// 		printf("%llu %d %s\n", timestamp, philo->id, msg);
+// 	pthread_mutex_unlock(&philo->data->write);
+// }
+
+
 int	is_dead(t_data *data)
 {
 	int	flag;
 	pthread_mutex_lock(&data->lock);
-	// if (data->dead)
-	// {
-	// 	pthread_mutex_unlock(&data->lock);
-	// 	return (1);
-	// }
+	if (data->dead)
+	{
+		pthread_mutex_unlock(&data->lock);
+		return (1);
+	}
 	flag = data->dead;
 	pthread_mutex_unlock(&data->lock);
 	return (flag);
