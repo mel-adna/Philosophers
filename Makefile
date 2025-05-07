@@ -1,7 +1,7 @@
 NAME = philo
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address -pthread
+CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=address -pthread
 
 SRCS = philo.c utils.c init.c monitor.c routine.c supervisor.c 
 OBJS = $(SRCS:.c=.o)

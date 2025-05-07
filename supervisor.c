@@ -22,7 +22,7 @@ void	*supervisor(void *arg)
 			pthread_mutex_unlock(&philo->data->lock);
 		}
 		pthread_mutex_unlock(&philo->lock);
-		usleep(1000);
+		my_usleep(philo->data, 100);
 	}
 	return (NULL);
 }

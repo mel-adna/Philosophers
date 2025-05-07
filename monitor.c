@@ -22,7 +22,7 @@ void	*monitor(void *arg)
 			data->finished = 1;
 			break ;
 		}
-		usleep(1000);
+		my_usleep(data,50);
 	}
 	return (NULL);
 }

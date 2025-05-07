@@ -74,7 +74,7 @@ int	start_threads(t_data *data)
 		if (pthread_create(&data->philos[i].t1, NULL, routine,
 				&data->philos[i]) != 0)
 			return (1);
-		// my_usleep(data, 1);
+		my_usleep(data, 1);
 		i++;
 	}
 	if (data->philo_num > 1 && data->meals_nb > 0)

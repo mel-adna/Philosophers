@@ -22,7 +22,7 @@ void	*routine(void *arg)
 	else
 		return (NULL);
 	if (philo->id % 2 == 0)
-		usleep(1000);
+		my_usleep(philo->data, 100);
 	while (!is_dead(philo->data) && !is_full(philo))
 	{
 		print_status(philo, "is thinking");
@@ -50,7 +50,7 @@ void	start_eating(t_philo *philo)
 	pthread_mutex_unlock(&philo->lock);
 	my_usleep(philo->data, philo->data->eat_time);
 	philo->eat_count++;
-	if (philo->data->meals_nb > 0 && philo->eat_count >= philo->data->meals_nb)
+	if (philo->data->meals_nb > 0 && philo->eat_count > philo->data->meals_nb)
 		philo->status = FINISHED;
 	pthread_mutex_lock(&philo->lock);
 	philo->eating = 0;
