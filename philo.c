@@ -41,23 +41,32 @@ static void *supervisor(void *arg)
     uint64_t current_time;
 
     philo = (t_philo *)arg;
-    while (!check_death(philo->data))
+    while (1)
     {
+        // First check if the simulation is already over
+        if (check_death(philo->data))
+            break;
+            
         current_time = get_time();
         pthread_mutex_lock(&philo->lock);
         
         // Check if philosopher is starving
         if (!philo->eating && current_time >= philo->time_to_die)
         {
-            // Philosopher has died
-            pthread_mutex_lock(&philo->data->write);
-            if (!philo->data->dead)  // Make sure we only print death once
-                printf("%llu %d died\n", (unsigned long long)(current_time - philo->data->start_time), philo->id);
-            pthread_mutex_unlock(&philo->data->write);
-            
             pthread_mutex_lock(&philo->data->lock);
-            philo->data->dead = 1;
-            pthread_mutex_unlock(&philo->data->lock);
+            if (!philo->data->dead) // Only the first death matters
+            {
+                philo->data->dead = 1;
+                pthread_mutex_unlock(&philo->data->lock);
+                
+                pthread_mutex_lock(&philo->data->write);
+                printf("%llu %d died\n", (unsigned long long)(current_time - philo->data->start_time), philo->id);
+                pthread_mutex_unlock(&philo->data->write);
+            }
+            else
+            {
+                pthread_mutex_unlock(&philo->data->lock);
+            }
             
             pthread_mutex_unlock(&philo->lock);
             return (NULL);
@@ -71,9 +80,9 @@ static void *supervisor(void *arg)
             philo->data->finished++;
             pthread_mutex_unlock(&philo->data->lock);
         }
-        pthread_mutex_unlock(&philo->lock);
         
-        usleep(1000); // Sleep for 1ms to avoid using too much CPU
+        pthread_mutex_unlock(&philo->lock);
+        usleep(500); // More frequent checks on macOS
     }
     return (NULL);
 }

@@ -45,9 +45,22 @@ uint64_t get_time(void)
 int ft_usleep(useconds_t time)
 {
     uint64_t start;
+    uint64_t current;
     
     start = get_time();
-    while ((get_time() - start) < time)
-        usleep(time / 10);
+    while (1)
+    {
+        current = get_time();
+        if (current - start >= time)
+            break;
+        
+        // Use smaller sleep times on macOS for better precision
+        if (current - start > time - 5)
+            usleep(500); // Very fine adjustment near the end
+        else if (current - start > time / 2)
+            usleep(1000); // Medium adjustment in the middle
+        else
+            usleep(time / 20); // Larger steps at the beginning
+    }
     return (0);
 }
