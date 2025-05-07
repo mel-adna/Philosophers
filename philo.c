@@ -4,7 +4,7 @@ static void print_status(t_philo *philo, char *status)
 {
     pthread_mutex_lock(&philo->data->write);
     if (!philo->data->dead)
-        printf("%lu %d %s\n", get_time() - philo->data->start_time, philo->id, status);
+        printf("%llu %d %s\n", (unsigned long long)(get_time() - philo->data->start_time), philo->id, status);
     pthread_mutex_unlock(&philo->data->write);
 }
 
@@ -20,9 +20,13 @@ static void philo_eat(t_philo *philo)
     pthread_mutex_lock(&philo->lock);
     philo->eating = 1;
     philo->time_to_die = get_time() + philo->data->death_time;
+    pthread_mutex_unlock(&philo->lock);
+    
     print_status(philo, "is eating");
-    philo->eat_cont++;
     ft_usleep(philo->data->eat_time);
+    
+    pthread_mutex_lock(&philo->lock);
+    philo->eat_cont++;
     philo->eating = 0;
     pthread_mutex_unlock(&philo->lock);
 
@@ -34,31 +38,42 @@ static void philo_eat(t_philo *philo)
 static void *supervisor(void *arg)
 {
     t_philo *philo;
+    uint64_t current_time;
 
     philo = (t_philo *)arg;
     while (!check_death(philo->data))
     {
+        current_time = get_time();
         pthread_mutex_lock(&philo->lock);
-        if (!philo->eating && get_time() > philo->time_to_die)
+        
+        // Check if philosopher is starving
+        if (!philo->eating && current_time >= philo->time_to_die)
         {
-            print_status(philo, "died");
+            // Philosopher has died
+            pthread_mutex_lock(&philo->data->write);
+            if (!philo->data->dead)  // Make sure we only print death once
+                printf("%llu %d died\n", (unsigned long long)(current_time - philo->data->start_time), philo->id);
+            pthread_mutex_unlock(&philo->data->write);
+            
             pthread_mutex_lock(&philo->data->lock);
             philo->data->dead = 1;
             pthread_mutex_unlock(&philo->data->lock);
+            
             pthread_mutex_unlock(&philo->lock);
-            break;
+            return (NULL);
         }
-        if (philo->eat_cont >= philo->data->meals_nb && philo->data->meals_nb != -1 && !philo->status)
+        
+        // Check meal count
+        if (philo->data->meals_nb != -1 && philo->eat_cont >= philo->data->meals_nb && !philo->status)
         {
             pthread_mutex_lock(&philo->data->lock);
             philo->status = 1;
             philo->data->finished++;
             pthread_mutex_unlock(&philo->data->lock);
-            pthread_mutex_unlock(&philo->lock);
-            break;
         }
         pthread_mutex_unlock(&philo->lock);
-        ft_usleep(1);
+        
+        usleep(1000); // Sleep for 1ms to avoid using too much CPU
     }
     return (NULL);
 }
@@ -69,7 +84,10 @@ void *philo_routine(void *arg)
     pthread_t tid;
 
     philo = (t_philo *)arg;
+    pthread_mutex_lock(&philo->lock);
     philo->time_to_die = get_time() + philo->data->death_time;
+    pthread_mutex_unlock(&philo->lock);
+    
     if (pthread_create(&tid, NULL, &supervisor, philo))
         return (NULL);
     pthread_detach(tid);
@@ -78,7 +96,9 @@ void *philo_routine(void *arg)
     if (philo->data->philo_num == 1)
     {
         print_status(philo, "has taken a fork");
-        ft_usleep(philo->data->death_time);
+        // Instead of sleeping, let the supervisor detect the death
+        while (!check_death(philo->data))
+            usleep(1000);
         return (NULL);
     }
 
