@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/07 18:44:43 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/07 18:44:44 by mel-adna         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 static void	print_status(t_philo *philo, char *status)
 {
 	pthread_mutex_lock(&philo->data->write);
 	if (!philo->data->dead)
-		printf("%llu %d %s\n", (unsigned long long)(get_time() - philo->data->start_time),
-			philo->id, status);
+		printf("%llu %d %s\n", (unsigned long long)(get_time()
+				- philo->data->start_time), philo->id, status);
 	pthread_mutex_unlock(&philo->data->write);
 }
 
@@ -44,8 +56,8 @@ static void	philo_eat(t_philo *philo)
 
 static void	*supervisor(void *arg)
 {
-	t_philo			*philo;
-	uint64_t		current_time;
+	t_philo		*philo;
+	uint64_t	current_time;
 
 	philo = (t_philo *)arg;
 	while (1)
@@ -62,9 +74,8 @@ static void	*supervisor(void *arg)
 				philo->data->dead = 1;
 				pthread_mutex_unlock(&philo->data->lock);
 				pthread_mutex_lock(&philo->data->write);
-				printf("%llu %d died\n",
-					(unsigned long long)(current_time - philo->data->start_time),
-					philo->id);
+				printf("%llu %d died\n", (unsigned long long)(current_time
+						- philo->data->start_time), philo->id);
 				pthread_mutex_unlock(&philo->data->write);
 			}
 			else
@@ -72,8 +83,8 @@ static void	*supervisor(void *arg)
 			pthread_mutex_unlock(&philo->lock);
 			return (NULL);
 		}
-		if (philo->data->meals_nb != -1 && philo->eat_count >= philo->data->meals_nb
-			&& !philo->is_full)
+		if (philo->data->meals_nb != -1
+			&& philo->eat_count >= philo->data->meals_nb && !philo->is_full)
 		{
 			pthread_mutex_lock(&philo->data->lock);
 			philo->is_full = 1;
@@ -88,8 +99,8 @@ static void	*supervisor(void *arg)
 
 void	*philo_routine(void *arg)
 {
-	t_philo		*philo;
-	pthread_t	tid;
+	t_philo *philo;
+	pthread_t tid;
 
 	philo = (t_philo *)arg;
 	pthread_mutex_lock(&philo->lock);
@@ -106,16 +117,15 @@ void	*philo_routine(void *arg)
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
-		ft_usleep(philo->data->eat_time * 0.1);
-	else if (philo->data->philo_num > 100)
-		ft_usleep(5);
-	while (!check_death(philo->data) &&
-		(philo->data->meals_nb == -1 || philo->eat_count < philo->data->meals_nb))
+		ft_usleep(philo->data->eat_time * 0.5);
+	while (!check_death(philo->data) && (philo->data->meals_nb == -1
+			|| philo->eat_count < philo->data->meals_nb))
 	{
 		philo_eat(philo);
 		print_status(philo, "is sleeping");
 		ft_usleep(philo->data->sleep_time);
 		print_status(philo, "is thinking");
+		usleep(150);
 	}
 	return (NULL);
 }

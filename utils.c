@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/07 18:44:50 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/07 18:44:51 by mel-adna         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	clear_data(t_data *data)
@@ -44,16 +56,16 @@ uint64_t	get_time(void)
 
 int	ft_usleep(uint64_t time)
 {
-	uint64_t	start;
-	uint64_t	current;
+	uint64_t start;
+	uint64_t current;
 
 	start = get_time();
 	while (1)
 	{
 		current = get_time();
 		if (current - start >= time)
-			break;
-		
+			break ;
+
 		if (time > 50)
 		{
 			if (current - start > time - 5)
