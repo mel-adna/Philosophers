@@ -95,7 +95,7 @@ int	wait_threads(t_data *data)
 	{
 		if (pthread_join(data->philos[i].t1, NULL) != 0)
 			return (1);
-		if (data->philo_num > 1)
+		if (data->philo_num > 1 && data->philos[i].supervisor)  // Check if supervisor exists
 		{
 			if (pthread_join(data->philos[i].supervisor, NULL) != 0)
 				return (1);

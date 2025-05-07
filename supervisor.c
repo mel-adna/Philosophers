@@ -17,12 +17,12 @@ void	*supervisor(void *arg)
 				pthread_mutex_unlock(&philo->data->lock);
 				print_status(philo, "died");
 				pthread_mutex_unlock(&philo->lock);
-				break ;
+				return (NULL); // Return immediately instead of break
 			}
 			pthread_mutex_unlock(&philo->data->lock);
 		}
 		pthread_mutex_unlock(&philo->lock);
-		my_usleep(philo->data, 100);
+		usleep(1000); // Check more frequently - 1ms intervals
 	}
 	return (NULL);
 }

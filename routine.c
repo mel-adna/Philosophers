@@ -36,8 +36,7 @@ void	*routine(void *arg)
 		print_status(philo, "is sleeping");
 		my_usleep(philo->data, philo->data->sleep_time);
 	}
-	if (supervisor_created)
-		pthread_join(philo->supervisor, NULL);
+	// We'll handle supervisor joining in wait_threads function
 	return (NULL);
 }
 
@@ -50,9 +49,10 @@ void	start_eating(t_philo *philo)
 	pthread_mutex_unlock(&philo->lock);
 	my_usleep(philo->data, philo->data->eat_time);
 	philo->eat_count++;
-	if (philo->data->meals_nb > 0 && philo->eat_count > philo->data->meals_nb)
-		philo->status = FINISHED;
+	
 	pthread_mutex_lock(&philo->lock);
 	philo->eating = 0;
+	if (philo->data->meals_nb > 0 && philo->eat_count >= philo->data->meals_nb)
+		philo->status = FINISHED;
 	pthread_mutex_unlock(&philo->lock);
 }

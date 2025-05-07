@@ -72,6 +72,7 @@ void	free_resources(t_data *data)
 			i++;
 		}
 		free(data->philos);
+		data->philos = NULL;
 	}
 	if (data->forks != NULL)
 	{
@@ -82,6 +83,7 @@ void	free_resources(t_data *data)
 			i++;
 		}
 		free(data->forks);
+		data->forks = NULL;
 	}
 	pthread_mutex_destroy(&data->write);
 	pthread_mutex_destroy(&data->lock);
