@@ -1,6 +1,6 @@
 NAME = philo
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pthread #-g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -pthread -g -fsanitize=thread 
 RM = rm -f
 
 SRCS = main.c utils.c philo.c monitor.c init.c
