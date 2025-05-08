@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/07 18:44:46 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/07 18:46:39 by mel-adna         ###   ########.fr       */
+/*   Created: 2025/05/08 10:49:59 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/08 13:11:42 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,16 +54,17 @@ typedef struct s_data
 }					t_data;
 
 int					ft_atoi(const char *str);
+void				init_data(t_data *data);
+int					init_philos(t_data *data);
+int					init_mutexes(t_data *data);
 void				*philo_routine(void *arg);
 void				*monitor_routine(void *arg);
 int					check_death(t_data *data);
-
 void				clear_data(t_data *data);
 void				ft_exit(t_data *data);
 int					error(char *str, t_data *data);
 uint64_t			get_time(void);
 int					ft_usleep(uint64_t time);
-
 int					parse_args(int argc, char **argv, t_data *data);
 int					init_mutexes(t_data *data);
 int					init_philos(t_data *data);

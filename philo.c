@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/07 18:44:43 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/07 18:44:44 by mel-adna         ###   ########.fr       */
+/*   Created: 2025/05/08 10:50:21 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/08 16:05:50 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ static void	*supervisor(void *arg)
 
 void	*philo_routine(void *arg)
 {
-	t_philo *philo;
-	pthread_t tid;
+	t_philo		*philo;
+	pthread_t	tid;
 
 	philo = (t_philo *)arg;
 	pthread_mutex_lock(&philo->lock);
@@ -117,7 +117,7 @@ void	*philo_routine(void *arg)
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
-		ft_usleep(philo->data->eat_time * 0.5);
+		ft_usleep(philo->data->eat_time / 2);
 	while (!check_death(philo->data) && (philo->data->meals_nb == -1
 			|| philo->eat_count < philo->data->meals_nb))
 	{

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/07 18:44:40 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/07 18:44:41 by mel-adna         ###   ########.fr       */
+/*   Created: 2025/05/08 10:50:29 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/08 11:53:42 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	check_death(t_data *data)
 
 void	*monitor_routine(void *arg)
 {
-	t_data *data;
+	t_data	*data;
 
 	data = (t_data *)arg;
 	while (1)

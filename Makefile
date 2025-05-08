@@ -1,22 +1,24 @@
 NAME = philo
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -pthread
+CFLAGS = -Wall -Wextra -Werror -pthread #-g -fsanitize=address
 RM = rm -f
 
-SRCS = main.c utils.c philo.c monitor.c
-
+SRCS = main.c utils.c philo.c monitor.c init.c
 OBJS = $(SRCS:.c=.o)
 
-all:	$(NAME)
+all: $(NAME)
 
-$(NAME):	$(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+$(NAME): $(OBJS)
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJS)
+	@$(RM) $(OBJS)
 
 fclean:	clean
-	$(RM) $(NAME)
+	@$(RM) $(NAME)
 
 re:	fclean all
 
