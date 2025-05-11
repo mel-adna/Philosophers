@@ -3,7 +3,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pthread -g -fsanitize=thread 
 RM = rm -f
 
-SRCS = main.c utils.c philo.c monitor.c init.c
+SRCS = parse.c utils.c philo.c monitor.c init.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
