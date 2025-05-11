@@ -6,7 +6,7 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 10:50:21 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/08 16:05:50 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/11 16:25:04 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ static void	*supervisor(void *arg)
 			pthread_mutex_unlock(&philo->lock);
 			return (NULL);
 		}
-		if (philo->data->meals_nb != -1
-			&& philo->eat_count >= philo->data->meals_nb && !philo->is_full)
+		if (philo->data->meals_nb != -1 && 
+			philo->eat_count >= philo->data->meals_nb && !philo->is_full)
 		{
 			pthread_mutex_lock(&philo->data->lock);
 			philo->is_full = 1;
@@ -101,6 +101,7 @@ void	*philo_routine(void *arg)
 {
 	t_philo		*philo;
 	pthread_t	tid;
+	int			should_continue;
 
 	philo = (t_philo *)arg;
 	pthread_mutex_lock(&philo->lock);
@@ -118,9 +119,18 @@ void	*philo_routine(void *arg)
 	}
 	if (philo->id % 2 == 0)
 		ft_usleep(philo->data->eat_time / 2);
-	while (!check_death(philo->data) && (philo->data->meals_nb == -1
-			|| philo->eat_count < philo->data->meals_nb))
+	
+	while (1)
 	{
+		// Check if philosopher should continue
+		pthread_mutex_lock(&philo->lock);
+		should_continue = !check_death(philo->data) && 
+			(philo->data->meals_nb == -1 || philo->eat_count < philo->data->meals_nb);
+		pthread_mutex_unlock(&philo->lock);
+		
+		if (!should_continue)
+			break;
+			
 		philo_eat(philo);
 		print_status(philo, "is sleeping");
 		ft_usleep(philo->data->sleep_time);

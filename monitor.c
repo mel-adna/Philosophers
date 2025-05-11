@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/08 10:50:29 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/08 11:53:42 by mel-adna         ###   ########.fr       */
+/*   Created: 2025/05/11 10:00:00 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/11 16:25:04 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 int	check_death(t_data *data)
 {
-	int	result;
-
 	pthread_mutex_lock(&data->lock);
-	result = data->dead;
+	if (data->dead || (data->meals_nb != -1 && data->finished >= data->philo_num))
+	{
+		pthread_mutex_unlock(&data->lock);
+		return (1);
+	}
 	pthread_mutex_unlock(&data->lock);
-	return (result);
+	return (0);
 }
 
 void	*monitor_routine(void *arg)
@@ -27,19 +29,14 @@ void	*monitor_routine(void *arg)
 	t_data	*data;
 
 	data = (t_data *)arg;
-	while (1)
+	while (!check_death(data))
 	{
 		pthread_mutex_lock(&data->lock);
-		if (data->dead)
-		{
-			pthread_mutex_unlock(&data->lock);
-			break ;
-		}
 		if (data->meals_nb != -1 && data->finished >= data->philo_num)
 		{
 			data->dead = 1;
 			pthread_mutex_unlock(&data->lock);
-			break ;
+			break;
 		}
 		pthread_mutex_unlock(&data->lock);
 		usleep(1000);

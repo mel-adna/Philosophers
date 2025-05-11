@@ -29,6 +29,7 @@ void	init_data(t_data *data)
 int	init_mutexes(t_data *data)
 {
 	int	i;
+	extern int	mutex_initialized;
 
 	i = 0;
 	while (i < data->philo_num)
@@ -40,6 +41,9 @@ int	init_mutexes(t_data *data)
 	if (pthread_mutex_init(&data->write, NULL)
 		|| pthread_mutex_init(&data->lock, NULL))
 		return (error("Mutex init failed (synchronization)", data));
+	
+	// Set the flag to indicate mutexes are initialized
+	mutex_initialized = 1;
 	return (0);
 }
 

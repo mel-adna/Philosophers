@@ -6,11 +6,14 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 10:50:10 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/08 16:52:34 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/11 16:25:04 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+// Global variable to track mutex initialization status
+int	mutex_initialized = 0;
 
 void	clear_data(t_data *data)
 {
@@ -25,15 +28,34 @@ void	clear_data(t_data *data)
 void	ft_exit(t_data *data)
 {
 	int	i;
+	static int	mutex_initialized = 0;
 
-	i = -1;
-	while (++i < data->philo_num)
+	// Only destroy mutexes if they've been properly initialized
+	if (data->forks && mutex_initialized)
 	{
-		pthread_mutex_destroy(&data->forks[i]);
-		pthread_mutex_destroy(&data->philos[i].lock);
+		i = -1;
+		while (++i < data->philo_num)
+		{
+			pthread_mutex_destroy(&data->forks[i]);
+		}
 	}
-	pthread_mutex_destroy(&data->write);
-	pthread_mutex_destroy(&data->lock);
+	
+	if (data->philos && mutex_initialized)
+	{
+		i = -1;
+		while (++i < data->philo_num)
+		{
+			pthread_mutex_destroy(&data->philos[i].lock);
+		}
+	}
+	
+	// Only destroy these mutexes if they've been properly initialized
+	if (mutex_initialized)
+	{
+		pthread_mutex_destroy(&data->write);
+		pthread_mutex_destroy(&data->lock);
+	}
+	
 	clear_data(data);
 }
 
