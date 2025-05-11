@@ -1,16 +1,32 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/08 10:50:10 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/11 16:58:51 by mel-adna         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "philo.h"
+
+uint64_t	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return ((uint64_t)(tv.tv_sec * 1000 + tv.tv_usec / 1000));
+}
+
+void	my_usleep(uint64_t time_in_ms)
+{
+	uint64_t	start;
+
+	start = get_time();
+	while ((get_time() - start) < time_in_ms)
+		usleep(100);
+}
+
+void	print_status(t_philo *philo, char *msg)
+{
+	pthread_mutex_lock(&philo->data->write);
+	if (!philo->data->dead)
+	{
+		printf("%llu %d %s\n", get_time() - philo->data->start_time, philo->id,
+			msg);
+	}
+	pthread_mutex_unlock(&philo->data->write);
+}
 
 int	ft_atoi(const char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 10:50:40 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/11 16:56:54 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:03:21 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	parse_args(int argc, char **argv, t_data *data)
 	i = 1;
 	while (i < argc)
 		if (!is_numeric(argv[i++]))
-			return (error("Invalid arguments", NULL));
+			return (printf("Invalid arguments"));
 	data->philo_num = ft_atoi(argv[1]);
 	data->death_time = (uint64_t)ft_atoi(argv[2]);
 	data->eat_time = (uint64_t)ft_atoi(argv[3]);
@@ -49,7 +49,7 @@ int	parse_args(int argc, char **argv, t_data *data)
 	if (data->philo_num < 1 || data->philo_num > 200 || data->death_time <= 0
 		|| data->eat_time <= 0 || data->sleep_time <= 0 || (argc == 6
 			&& data->meals_nb <= 0))
-		return (error("Invalid arguments", data));
+		return (printf("Invalid arguments"));
 	data->dead = 0;
 	data->finished = 0;
 	return (0);

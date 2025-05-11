@@ -6,7 +6,7 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 10:49:59 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/11 16:59:07 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/11 17:09:21 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,9 @@ typedef struct s_data
 }					t_data;
 
 int					ft_atoi(const char *str);
-
+int					parse_args(int argc, char **argv, t_data *data);
+void				print_status(t_philo *philo, char *msg);
+uint64_t			get_time(void);
+void				my_usleep(uint64_t time_in_ms);
 
 #endif
