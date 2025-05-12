@@ -35,8 +35,8 @@ int	ft_atoi(const char *str)
 	unsigned long	result;
 
 	i = 0;
-	result = 0;
 	sign = 1;
+	result = 0;
 	while ((str[i] >= '\t' && str[i] <= '\r') || str[i] == ' ')
 		i++;
 	if (str[i] == '+' || str[i] == '-')
@@ -49,10 +49,28 @@ int	ft_atoi(const char *str)
 	{
 		result = result * 10 + (str[i] - '0');
 		i++;
-		if (result > 9223372036854775807 && sign > 0)
+		if (result > 2147483647 && sign == 1)
 			return (-1);
-		if (result > 9223372036854775807 && sign < 0)
-			return (0);
+		if (result > 2147483648 && sign == -1)
+			return (-1);
 	}
-	return (result * sign);
+	return ((int)(result * sign));
+}
+
+
+void	cleanup(t_data *data)
+{
+	int i;
+
+	i = 0;
+	while (i < data->philo_num)
+	{
+		pthread_mutex_destroy(&data->forks[i]);
+		pthread_mutex_destroy(&data->philos[i].lock);
+		i++;
+	}
+	pthread_mutex_destroy(&data->write);
+	pthread_mutex_destroy(&data->lock);
+	free(data->philos);
+	free(data->forks);
 }

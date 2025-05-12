@@ -4,6 +4,7 @@
 # include <pthread.h>
 # include <stdint.h>
 # include <stdio.h>
+# include <limits.h>
 # include <stdlib.h>
 # include <sys/time.h>
 # include <unistd.h>
@@ -16,6 +17,7 @@ typedef struct s_philo
 	pthread_t		t1;
 	int				id;
 	int				eat_count;
+	int				status;
 	int				is_full;
 	int				eating;
 	uint64_t		time_to_die;
@@ -43,12 +45,14 @@ typedef struct s_data
 
 int					ft_atoi(const char *str);
 int					parse_args(int argc, char **argv, t_data *data);
+void				my_usleep(uint64_t time_in_ms);
 void				print_status(t_philo *philo, char *msg);
 uint64_t			get_time(void);
-void				my_usleep(uint64_t time_in_ms);
 int					init_philos(t_data *data);
-int					init_mutex(t_data *data);
-void				*monitoring(void *arg);
+int					init_data(t_data *data);
+void				*monitor(void *arg);
+void				cleanup(t_data *data);
+void				start_simulation(t_data *data);
+void				eat(t_philo *philo);
 void				*routine(void *arg);
-
 #endif
