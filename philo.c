@@ -7,10 +7,12 @@ void	eat(t_philo *philo)
 	pthread_mutex_lock(philo->r_fork);
 	print_status(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->lock);
-	print_status(philo, "is eating");
-	philo->time_to_die = get_time() + philo->data->death_time;
-	philo->eat_count++;
 	philo->eating = 1;
+	philo->time_to_die = get_time() + philo->data->death_time;
+	print_status(philo, "is eating");
+	philo->eat_count++;
+	if (philo->eat_count >= philo->data->meals_nb && philo->data->meals_nb != -1)
+		philo->is_full = 1;
 	pthread_mutex_unlock(&philo->lock);
 	my_usleep(philo->data->eat_time);
 	pthread_mutex_lock(&philo->lock);
@@ -30,22 +32,18 @@ void	*routine(void *arg)
 		pthread_mutex_lock(philo->l_fork);
 		print_status(philo, "has taken a fork");
 		my_usleep(philo->data->death_time);
-		print_status(philo, "died");
+		// Don't print died message here, monitor will handle it
 		pthread_mutex_unlock(philo->l_fork);
 		return (NULL);
 	}
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	while (!philo->data->dead)
+	while (!philo->data->dead && !philo->data->finished)
 	{
 		print_status(philo, "is thinking");
 		eat(philo);
-		if (philo->data->meals_nb != -1
-			&& philo->eat_count > philo->data->meals_nb)
-		{
-			philo->is_full = 1;
-			break ;
-		}
+		if (philo->is_full)
+			break;
 		print_status(philo, "is sleeping");
 		my_usleep(philo->data->sleep_time);
 	}

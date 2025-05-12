@@ -4,6 +4,7 @@ void *monitor(void *arg)
 {
     t_data *data = (t_data *)arg;
     int i, full_count;
+    uint64_t current_time;
 
     while (1)
     {
@@ -12,12 +13,20 @@ void *monitor(void *arg)
         while (i < data->philo_num)
         {
             pthread_mutex_lock(&data->philos[i].lock);
-            if (!data->philos[i].eating && get_time() > data->philos[i].time_to_die)
+            current_time = get_time();
+            // For debugging, uncomment if needed
+            // debug_time_to_die(&data->philos[i]);
+            if (current_time > data->philos[i].time_to_die)
             {
+                pthread_mutex_lock(&data->write);
                 pthread_mutex_lock(&data->lock);
-                data->dead = 1;
+                if (!data->dead) // Only print if not already marked as dead
+                {
+                    data->dead = 1;
+                    printf("%lu %d died\n", current_time - data->start_time, data->philos[i].id);
+                }
                 pthread_mutex_unlock(&data->lock);
-                print_status(&data->philos[i], "died");
+                pthread_mutex_unlock(&data->write);
                 pthread_mutex_unlock(&data->philos[i].lock);
                 return NULL;
             }

@@ -22,10 +22,18 @@ void	print_status(t_philo *philo, char *msg)
 	pthread_mutex_lock(&philo->data->write);
 	if (!philo->data->dead)
 	{
-		printf("%llu %d %s\n", get_time() - philo->data->start_time, philo->id,
+		printf("%lu %d %s\n", get_time() - philo->data->start_time, philo->id,
 			msg);
 	}
 	pthread_mutex_unlock(&philo->data->write);
+}
+
+void	debug_time_to_die(t_philo *philo)
+{
+	uint64_t current = get_time();
+	printf("DEBUG: Philo %d, current time: %lu, time_to_die: %lu, diff: %ld\n",
+		philo->id, current, philo->time_to_die, 
+		(int64_t)philo->time_to_die - (int64_t)current);
 }
 
 int	ft_atoi(const char *str)
