@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philo.h                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/08 10:49:59 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/11 17:09:21 by mel-adna         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -58,5 +46,9 @@ int					parse_args(int argc, char **argv, t_data *data);
 void				print_status(t_philo *philo, char *msg);
 uint64_t			get_time(void);
 void				my_usleep(uint64_t time_in_ms);
+int					init_philos(t_data *data);
+int					init_mutex(t_data *data);
+void				*monitoring(void *arg);
+void				*routine(void *arg);
 
 #endif
