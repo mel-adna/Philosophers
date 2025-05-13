@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/13 12:01:04 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/13 12:08:19 by mel-adna         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	eat(t_philo *philo)
@@ -11,7 +23,8 @@ void	eat(t_philo *philo)
 	philo->time_to_die = get_time() + philo->data->death_time;
 	print_status(philo, "is eating");
 	philo->eat_count++;
-	if (philo->eat_count >= philo->data->meals_nb && philo->data->meals_nb != -1)
+	if (philo->eat_count >= philo->data->meals_nb && 
+		philo->data->meals_nb != -1)
 		philo->is_full = 1;
 	pthread_mutex_unlock(&philo->lock);
 	my_usleep(philo->data->eat_time);
@@ -25,27 +38,28 @@ void	eat(t_philo *philo)
 void	*routine(void *arg)
 {
 	t_philo	*philo;
+	int		finished;
 
+	finished = 0;
 	philo = (t_philo *)arg;
 	if (philo->data->philo_num == 1)
 	{
 		pthread_mutex_lock(philo->l_fork);
 		print_status(philo, "has taken a fork");
 		my_usleep(philo->data->death_time);
-		// Don't print died message here, monitor will handle it
-		pthread_mutex_unlock(philo->l_fork);
-		return (NULL);
+		return (pthread_mutex_unlock(philo->l_fork), NULL);
 	}
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	while (!philo->data->dead && !philo->data->finished)
+	while (!philo->data->dead && !finished)
 	{
 		print_status(philo, "is thinking");
 		eat(philo);
-		if (philo->is_full)
-			break;
 		print_status(philo, "is sleeping");
 		my_usleep(philo->data->sleep_time);
+		pthread_mutex_lock(&philo->data->lock);
+		finished = philo->data->finished;
+		pthread_mutex_unlock(&philo->data->lock);
 	}
 	return (NULL);
 }

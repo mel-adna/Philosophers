@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/13 12:01:12 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/13 12:01:13 by mel-adna         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 uint64_t	get_time(void)
@@ -11,10 +23,16 @@ uint64_t	get_time(void)
 void	my_usleep(uint64_t time_in_ms)
 {
 	uint64_t	start;
+	uint64_t	current;
 
 	start = get_time();
-	while ((get_time() - start) < time_in_ms)
+	while (1)
+	{
+		current = get_time();
+		if ((current - start) >= time_in_ms)
+			break ;
 		usleep(100);
+	}
 }
 
 void	print_status(t_philo *philo, char *msg)
@@ -22,18 +40,10 @@ void	print_status(t_philo *philo, char *msg)
 	pthread_mutex_lock(&philo->data->write);
 	if (!philo->data->dead)
 	{
-		printf("%lu %d %s\n", get_time() - philo->data->start_time, philo->id,
+		printf("%llu %d %s\n", get_time() - philo->data->start_time, philo->id,
 			msg);
 	}
 	pthread_mutex_unlock(&philo->data->write);
-}
-
-void	debug_time_to_die(t_philo *philo)
-{
-	uint64_t current = get_time();
-	printf("DEBUG: Philo %d, current time: %lu, time_to_die: %lu, diff: %ld\n",
-		philo->id, current, philo->time_to_die, 
-		(int64_t)philo->time_to_die - (int64_t)current);
 }
 
 int	ft_atoi(const char *str)
@@ -57,18 +67,15 @@ int	ft_atoi(const char *str)
 	{
 		result = result * 10 + (str[i] - '0');
 		i++;
-		if (result > 2147483647 && sign == 1)
-			return (-1);
-		if (result > 2147483648 && sign == -1)
+		if (result > 2147483647)
 			return (-1);
 	}
 	return ((int)(result * sign));
 }
 
-
 void	cleanup(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < data->philo_num)
