@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-bouk <hel-bouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:00:52 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/13 12:00:53 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/13 18:20:16 by hel-bouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ int	init_data(t_data *data)
 		if (pthread_mutex_init(&data->forks[i++], NULL))
 			return (printf("Fork mutex init failed\n"), 1);
 	if (pthread_mutex_init(&data->write, NULL)
-		|| pthread_mutex_init(&data->lock, NULL))
+		|| pthread_mutex_init(&data->lock, NULL)
+		|| pthread_mutex_init(&data->die, NULL))
 		return (printf("Global mutex init failed\n"), 1);
 	data->philos = malloc(sizeof(t_philo) * data->philo_num);
 	if (!data->philos)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hel-bouk <hel-bouk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:01:09 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/13 12:08:46 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/13 18:10:58 by hel-bouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,14 @@ typedef struct s_data
 	uint64_t		sleep_time;
 	uint64_t		start_time;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	die;
 	pthread_mutex_t	lock;
 	pthread_mutex_t	write;
 }					t_data;
 
 int					ft_atoi(const char *str);
 int					parse_args(int argc, char **argv, t_data *data);
-void				my_usleep(uint64_t time_in_ms);
+void				my_usleep(uint64_t time_in_ms, t_philo *philo);
 void				print_status(t_philo *philo, char *msg);
 uint64_t			get_time(void);
 int					init_philos(t_data *data);

@@ -6,7 +6,7 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:01:04 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/13 12:08:19 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/14 09:25:21 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	eat(t_philo *philo)
 	pthread_mutex_lock(philo->r_fork);
 	print_status(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->lock);
-	philo->eating = 1;
+	philo->eating = 1; 
 	philo->time_to_die = get_time() + philo->data->death_time;
 	print_status(philo, "is eating");
 	philo->eat_count++;
@@ -27,7 +27,7 @@ void	eat(t_philo *philo)
 		philo->data->meals_nb != -1)
 		philo->is_full = 1;
 	pthread_mutex_unlock(&philo->lock);
-	my_usleep(philo->data->eat_time);
+	my_usleep(philo->data->eat_time, philo);
 	pthread_mutex_lock(&philo->lock);
 	philo->eating = 0;
 	pthread_mutex_unlock(&philo->lock);
@@ -46,17 +46,17 @@ void	*routine(void *arg)
 	{
 		pthread_mutex_lock(philo->l_fork);
 		print_status(philo, "has taken a fork");
-		my_usleep(philo->data->death_time);
+		my_usleep(philo->data->death_time, philo);
 		return (pthread_mutex_unlock(philo->l_fork), NULL);
 	}
 	if (philo->id % 2 == 0)
-		usleep(1000);
+		usleep(100);
 	while (!philo->data->dead && !finished)
 	{
 		print_status(philo, "is thinking");
 		eat(philo);
 		print_status(philo, "is sleeping");
-		my_usleep(philo->data->sleep_time);
+		my_usleep(philo->data->sleep_time, philo);
 		pthread_mutex_lock(&philo->data->lock);
 		finished = philo->data->finished;
 		pthread_mutex_unlock(&philo->data->lock);

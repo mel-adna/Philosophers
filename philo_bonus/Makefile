@@ -1,7 +1,7 @@
 NAME = philo
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=thread
-SRCS = parse.c utils.c init.c monitor.c philo.c
+SRCS = parse.c philo.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

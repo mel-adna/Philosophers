@@ -6,16 +6,15 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:00:56 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/13 12:00:57 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/13 20:02:17 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int	check_philo_death(t_data *data, int i)
+static int	check_philo_death(t_data *data, int i, int is_full)
 {
 	uint64_t	current_time;
-	int			is_full;
 
 	pthread_mutex_lock(&data->philos[i].lock);
 	current_time = get_time();
@@ -23,6 +22,7 @@ static int	check_philo_death(t_data *data, int i)
 	{
 		pthread_mutex_lock(&data->write);
 		pthread_mutex_lock(&data->lock);
+		pthread_mutex_lock(&data->die);
 		if (!data->dead)
 		{
 			data->dead = 1;
@@ -30,9 +30,9 @@ static int	check_philo_death(t_data *data, int i)
 				data->philos[i].id);
 		}
 		pthread_mutex_unlock(&data->lock);
+		pthread_mutex_unlock(&data->die);
 		pthread_mutex_unlock(&data->write);
-		pthread_mutex_unlock(&data->philos[i].lock);
-		return (1);
+		return (pthread_mutex_unlock(&data->philos[i].lock), 1);
 	}
 	is_full = data->philos[i].is_full;
 	pthread_mutex_unlock(&data->philos[i].lock);
@@ -55,7 +55,7 @@ void	*monitor(void *arg)
 		i = -1;
 		while (++i < data->philo_num)
 		{
-			result = check_philo_death(data, i);
+			result = check_philo_death(data, i, 0);
 			if (result == 1)
 				return (NULL);
 			if (result == 2)
