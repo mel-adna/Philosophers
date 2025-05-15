@@ -1,15 +1,15 @@
 NAME = philo
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=thread
-SRCS = parse.c philo.c
+SRCS = philo.c utils.c parse.c
 OBJS = $(SRCS:.c=.o)
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
 
-all: $(NAME)
+all: $(NAME) clean
 
 $(NAME): $(OBJS)
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
-%.o: %.c philo.h
+%.o: %.c philo_bonus.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
@@ -20,4 +20,3 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:01:12 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/14 12:07:37 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/15 19:54:32 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	my_usleep(uint64_t time_in_ms, t_philo *philo)
 	uint64_t	current;
 
 	start = get_time();
+	(void)philo;
 	while (1)
 	{
 		pthread_mutex_lock(&philo->data->die);
@@ -36,9 +37,9 @@ void	my_usleep(uint64_t time_in_ms, t_philo *philo)
 		}
 		pthread_mutex_unlock(&philo->data->die);
 		current = get_time();
-		if ((current - start) >= time_in_ms)
+		if ((current - start) > time_in_ms)
 			break ;
-		usleep(1500);
+		usleep(1000);
 	}
 }
 

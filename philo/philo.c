@@ -6,7 +6,7 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:01:04 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/14 09:25:21 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:48:48 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	eat(t_philo *philo)
 	pthread_mutex_lock(philo->r_fork);
 	print_status(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->lock);
-	philo->eating = 1; 
+	philo->eating = 1;
 	philo->time_to_die = get_time() + philo->data->death_time;
 	print_status(philo, "is eating");
 	philo->eat_count++;
@@ -50,7 +50,7 @@ void	*routine(void *arg)
 		return (pthread_mutex_unlock(philo->l_fork), NULL);
 	}
 	if (philo->id % 2 == 0)
-		usleep(100);
+		usleep(1000);
 	while (!philo->data->dead && !finished)
 	{
 		print_status(philo, "is thinking");
