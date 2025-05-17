@@ -17,31 +17,18 @@ void	my_usleep(long ms)
 		usleep(100);
 }
 
-void print_status(t_args *args, int id, const char *msg)
+void	print_status(t_args *args, int id, const char *msg)
 {
-    long timestamp;
+	long	timestamp;
 
-    sem_wait(args->print_lock);
-    if (strcmp(msg, "died") != 0)  // Only non-death messages should check and release
-    {
-        timestamp = get_time_ms() - args->start_time;
-        printf("%ld %d %s\n", timestamp, id + 1, msg);
-        sem_post(args->print_lock);
-    }
-    // For "died" message, the caller should handle locking/unlocking
+	sem_wait(args->print_lock);
+	if (strcmp(msg, "died") != 0)
+	{
+		timestamp = get_time_ms() - args->start_time;
+		printf("%ld %d %s\n", timestamp, id + 1, msg);
+		sem_post(args->print_lock);
+	}
 }
-
-// void	print_status(t_args *args, int id, const char *msg)
-// {
-// 	long	timestamp;
-
-// 	sem_wait(args->print_lock);
-// 	sem_wait(args->death);
-// 	timestamp = get_time_ms() - args->start_time;
-// 	printf("%ld %d %s\n", timestamp, id + 1, msg);
-// 	sem_post(args->print_lock);
-// 	sem_post(args->death);
-// }
 
 int	ft_atoi(const char *str)
 {

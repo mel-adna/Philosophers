@@ -7,8 +7,7 @@ void	*monitor_death(void *arg)
 	philo = (t_philo *)arg;
 	while (1)
 	{
-		usleep(1000);
-		if ((get_time_ms() - philo->last_meal) > philo->args->t_die)
+		if ((get_time_ms() - philo->last_meal) >= philo->args->t_die)
 		{
 			sem_wait(philo->args->print_lock);
 			printf("%ld %d %s\n", get_time_ms() - philo->args->start_time,
@@ -16,6 +15,7 @@ void	*monitor_death(void *arg)
 			sem_post(philo->args->stop_sim);
 			exit(1);
 		}
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -57,11 +57,12 @@ void	philo_routine(t_args *args, int id)
 	{
 		print_status(args, id, "is thinking");
 		philo_eat_cycle(philo);
-		if (args->must_eat > 0 && philo->eat_count >= args->must_eat)
+		if (args->must_eat > 0 && philo->eat_count > args->must_eat)
 			exit(0);
 		print_status(args, id, "is sleeping");
 		my_usleep(args->t_sleep);
 	}
+	usleep(10);
 }
 
 int	launch_philosophers(t_args *args)

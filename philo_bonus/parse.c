@@ -79,21 +79,3 @@ int	parse_args(int argc, char **argv, t_args *args)
 	args->start_time = get_time_ms();
 	return (0);
 }
-
-/*  child processes does not share the same memory
-	how each philo must detect its death
-	how other philos should detect the death of a philo
-
- semaphores are shared memory between processes
- how do they share memory
- semaphore integer : decrement / increment : wait / post : sem_wait / sem_post
- sem = 0 ; you can not wait on it ;
- sem = 1 ; you can wait on it ;
-
-
-
- philosophers : child processes
- forks : semaphores
- data : each philo has a copy from the data wich is all infos each one need;
- each philo has its own data struct
-*/
