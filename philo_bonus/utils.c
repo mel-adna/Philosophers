@@ -22,12 +22,10 @@ void	print_status(t_args *args, int id, const char *msg)
 	long	timestamp;
 
 	sem_wait(args->print_lock);
+	timestamp = get_time_ms() - args->start_time;
+	printf("%ld %d %s\n", timestamp, id + 1, msg);
 	if (strcmp(msg, "died") != 0)
-	{
-		timestamp = get_time_ms() - args->start_time;
-		printf("%ld %d %s\n", timestamp, id + 1, msg);
 		sem_post(args->print_lock);
-	}
 }
 
 int	ft_atoi(const char *str)

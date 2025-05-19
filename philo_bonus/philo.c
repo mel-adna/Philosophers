@@ -57,8 +57,11 @@ void	philo_routine(t_args *args, int id)
 	{
 		print_status(args, id, "is thinking");
 		philo_eat_cycle(philo);
-		if (args->must_eat > 0 && philo->eat_count > args->must_eat)
-			exit(0);
+		if (args->must_eat > 0 && philo->eat_count >= args->must_eat)
+			{
+				free(philo);
+				exit(0);
+			}
 		print_status(args, id, "is sleeping");
 		my_usleep(args->t_sleep);
 	}

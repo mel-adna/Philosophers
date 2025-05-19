@@ -1,8 +1,8 @@
-NAME = philo
-SRCS = philo.c utils.c parse.c
+NAME = philo_bonus
+SRCS = philo.c utils.c parse.c 
 OBJS = $(SRCS:.c=.o)
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror 
 
 all: $(NAME) clean
 

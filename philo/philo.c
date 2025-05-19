@@ -6,7 +6,7 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:01:04 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/16 18:33:59 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/17 13:39:00 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	*routine(void *arg)
 	}
 	if (philo->id % 2 == 0)
 		usleep(1000);
-	while (!philo->data->dead && !finished)
+	while (!philo->data->dead && !finished )
 	{
 		print_status(philo, "is thinking");
 		eat(philo);

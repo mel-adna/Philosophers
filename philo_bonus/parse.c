@@ -37,13 +37,17 @@ static int	set_values(int argc, char **argv, t_args *args)
 
 static int	init_semaphores(t_args *args)
 {
+	int	meal_count;
+
 	sem_unlink("/forks");
 	sem_unlink("/print_lock");
 	sem_unlink("/stop_sim");
 	sem_unlink("/death");
-	sem_unlink(SEM_MEAL);
-	args->meal_gate = sem_open(SEM_MEAL, O_CREAT | O_EXCL, 0644, 
-			args->n_philo / 2);
+	sem_unlink("/meal");
+	meal_count = args->n_philo / 2;
+	if (meal_count == 0)
+		meal_count = 1;
+	args->meal_gate = sem_open("/meal", O_CREAT | O_EXCL, 0644, meal_count);
 	if (args->meal_gate == SEM_FAILED)
 		return (0);
 	args->death = sem_open("/death", O_CREAT | O_EXCL, 0644, 1);

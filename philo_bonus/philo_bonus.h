@@ -12,11 +12,6 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define SEM_FORKS "/forks"
-# define SEM_PRINT "/print_lock"
-# define SEM_STOP "/stop_sim"
-# define SEM_MEAL "/meal_gate"
-
 typedef struct s_args
 {
 	int		n_philo;
