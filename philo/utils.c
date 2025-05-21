@@ -6,7 +6,7 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:01:12 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/17 12:50:55 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/20 20:04:39 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ void	my_usleep(uint64_t time_in_ms, t_philo *philo)
 		}
 		pthread_mutex_unlock(&philo->data->die);
 		current = get_time();
-		if ((current - start) > time_in_ms)
+		if ((current - start) >= time_in_ms)
 			break ;
-		usleep(1000);
+		usleep(100);
 	}
 }
 

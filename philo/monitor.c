@@ -6,7 +6,7 @@
 /*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:00:56 by mel-adna          #+#    #+#             */
-/*   Updated: 2025/05/17 13:37:17 by mel-adna         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:49:31 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	check_philo_death(t_data *data, int i, int is_full)
 
 	pthread_mutex_lock(&data->philos[i].lock);
 	current_time = get_time();
-	if (current_time > data->philos[i].time_to_die)
+	if (current_time >= data->philos[i].time_to_die)
 	{
 		pthread_mutex_lock(&data->write);
 		pthread_mutex_lock(&data->lock);
