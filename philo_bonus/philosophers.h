@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mbari <mbari@student.42.fr>                +#+  +:+       +#+        */
+/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 18:11:38 by mbari             #+#    #+#             */
-/*   Updated: 2021/07/16 09:05:26 by mbari            ###   ########.fr       */
+/*   Updated: 2025/05/21 10:19:21 by mel-adna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
+/* Standard Library Includes */
 # include <stdio.h>
 # include <semaphore.h>
 # include <pthread.h>
@@ -23,59 +24,107 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <signal.h>
+# include <sys/wait.h>
 
-# define YES 1
-# define NO 0
-# define FORK 1
-# define EATING 2
-# define SLEEPING 3
-# define THINKING 4
-# define DIED 5
-# define DONE 6
+/* Boolean Constants */
+# define TRUE 1
+# define FALSE 0
 
+/* Philosopher States */
+# define STATE_FORK "has taken a fork"
+# define STATE_EATING "is eating"
+# define STATE_SLEEPING "is sleeping"
+# define STATE_THINKING "is thinking"
+# define STATE_DIED "died"
+# define STATE_DONE "has eaten enough"
+
+/* Minimum time in milliseconds */
+# define MIN_TIME_MS 60
+
+/**
+ * Structure to hold simulation settings and shared resources
+ */
 typedef struct s_simulation
 {
-	sem_t			*forks;
-	sem_t			*message;
-	sem_t			*death;
-	sem_t			*stop;
-	unsigned int	start;
-	int				philo_numbers;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				eat_counter;
-	int				max_eat;
-	int				current_eat;
+	sem_t			*forks;          /* Semaphore for forks */
+	sem_t			 *print;         /* Semaphore for console output */
+	sem_t			*death;          /* Semaphore to check death status */
+	sem_t			*stop;           /* Semaphore to stop simulation */
+	unsigned int	start;           /* Simulation start timestamp in ms */
+	int				philo_numbers;   /* Number of philosophers */
+	int				time_to_die;     /* Time until philosopher dies without eating */
+	int				time_to_eat;     /* Time it takes to eat */
+	int				time_to_sleep;   /* Time it takes to sleep */
+	int				eat_counter;     /* Required meals per philosopher (-1 for unlimited) */
+	int				max_eat;         /* Required total meals for all philosophers */
+	int				current_eat;     /* Current total meals eaten */
 }				t_simulation;
 
+/**
+ * Structure to hold philosopher data
+ */
 typedef struct s_philo
 {
-	t_simulation	*data;
-	pid_t			pid;
-	unsigned int	eating_time;
-	unsigned int	next_meal;
-	int				index;
-	int				is_dead;
-	int				eat_counter;
+	t_simulation	*data;           /* Pointer to simulation data */
+	pid_t			pid;             /* Process ID for this philosopher */
+	unsigned int	eating_time;     /* Time when last meal started */
+	unsigned int	next_meal;       /* Time when philosopher will die */
+	int				id;              /* Philosopher ID (1-indexed) */
+	int				is_dead;         /* Philosopher death status */
+	int				eat_counter;     /* Number of meals this philosopher has eaten */
 }				t_philo;
 
-unsigned int	ft_get_time(void);
-void			ft_routine(t_philo *philo);
-void			ft_eat(t_philo *philo);
-void			ft_sleep(t_philo *philo);
-int				ft_get_number(char *arg);
-void			*ft_check_death(void *arg);
-void			ft_take_fork(t_philo *philo);
-void			ft_print_message(int id, t_philo *philo);
-t_philo			*ft_philo_init(t_simulation *simulation);
-void			ft_create_semaphores(t_simulation *simulation);
-int				ft_parsing(char **av, t_simulation *simulation);
-int				ft_set_rest(t_simulation *simulation, int num, int i);
-int				ft_set_data(t_simulation *simulation, int num, int i);
-void			ft_destroy_all(t_simulation *simulation, t_philo *philo);
-void			ft_for_each_philo(t_simulation *simulation, t_philo *philo,
-					int i);
-int				ft_error_put(t_simulation *simulation, char *message, int ret);
+/* Time functions */
+unsigned int	get_timestamp_ms(void);
+void			sleep_ms(unsigned int ms);
+
+/* Core philosopher actions */
+void			philosopher_routine(t_philo *philo);
+void			philosopher_eat(t_philo *philo);
+void			philosopher_sleep(t_philo *philo);
+void			philosopher_take_forks(t_philo *philo);
+
+/* Parsing functions */
+int				parse_arguments(char **argv, t_simulation *simulation);
+int				parse_positive_int(char *arg);
+int				set_simulation_value(t_simulation *simulation, int value, int param_index);
+int				set_optional_params(t_simulation *simulation, int value, int param_index);
+
+/* Initialization functions */
+t_philo			*init_philosophers(t_simulation *simulation);
+int				init_semaphores(t_simulation *simulation);
+
+/* Monitor functions */
+void			*monitor_philosopher_health(void *arg);
+void			print_status(char *status, t_philo *philo);
+
+/* Process management */
+void			create_philosopher_processes(t_simulation *simulation, t_philo *philo);
+void			cleanup_resources(t_simulation *simulation, t_philo *philo);
+
+/* Error handling */
+int				error_exit(t_simulation *simulation, char *message, int ret);
+
+/* main.c */
+int				main(int ac, char **av);
+
+/* utils.c */
+unsigned int	get_timestamp_ms(void);
+int				ft_atoi(const char *str);
+int				ft_strcmp(const char *s1, const char *s2);
+
+/* simulation.c */
+int				parse_arguments(char **av, t_simulation *simulation);
+int				init_semaphores(t_simulation *simulation);
+void			create_philosopher_processes(t_simulation *simulation, t_philo *philo);
+
+/* philosopher_actions.c */
+t_philo			*init_philosophers(t_simulation *simulation);
+void			philosopher_take_forks(t_philo *philo);
+void			philosopher_eat(t_philo *philo);
+void			philosopher_sleep(t_philo *philo);
+
+/* philosopher_lifecycle.c */
+void			run_philosopher_lifecycle(t_philo *philo);
 
 #endif
