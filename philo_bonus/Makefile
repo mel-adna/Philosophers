@@ -8,25 +8,19 @@ SRC = main.c \
       philosopher_actions.c \
       philosopher_lifecycle.c
 
-# Object files
 OBJ = $(SRC:.c=.o)
 
-# Header files
 HEADER = philosophers.h
 
-# Dependency files
 DEPS = $(OBJ:.o=.d)
 
-# Colors for terminal output
 RED = \033[0;31m
 GREEN = \033[0;32m
 YELLOW = \033[0;33m
 RESET = \033[0m
 
-# Default target
 all: $(NAME)
 
-# Compile the executable
 $(NAME): $(OBJ)
 	@echo "$(YELLOW)Linking...$(RESET)"
 	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
