@@ -11,18 +11,11 @@ uint64_t	get_time(void)
 void	my_usleep(uint64_t time_in_ms, t_philo *philo)
 {
 	uint64_t	start;
-	uint64_t	end;
 
 	(void)philo;
 	start = get_time();
-	while (get_time() - start < time_in_ms)
-	{
-		end = get_time() - start;
-		if (end >= time_in_ms)
-			break ;
-		usleep(500);
-	}
-		
+	while (get_time() - start <= time_in_ms)
+		usleep(100);
 }
 
 void	print_status(t_philo *philo, char *status)

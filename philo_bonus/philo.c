@@ -20,7 +20,7 @@ void	eating(t_philo *philo)
 	{
 		sem_wait(args->lock);
 		philo->eat_count++;
-		if (philo->eat_count == args->must_eat)
+		if (philo->eat_count >= args->must_eat)
 			sem_post(args->meal_gate);
 		sem_post(args->lock);
 	}
@@ -75,10 +75,10 @@ void	philo_routine(t_philo *philo)
 	{
 		print_status(philo, "is thinking");
 		eating(philo);
-		print_status(philo, "is sleeping");
-		my_usleep(args->t_sleep, philo);
 		if (args->must_eat != -1 && philo->eat_count > args->must_eat)
 			exit(0);
+		print_status(philo, "is sleeping");
+		my_usleep(args->t_sleep, philo);
 	}
 }
 
@@ -99,11 +99,10 @@ void	cleanning(t_args *args)
 
 void	wait_children(t_args *args, pid_t *pids)
 {
-	int		i;
-	int		status;
-	pid_t	finished_pid;
+	int	i;
+	int	status;
 
-	finished_pid = wait(&status);
+	wait(&status);
 	i = 0;
 	while (i < args->n_philo)
 	{

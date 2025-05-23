@@ -1,13 +1,8 @@
-NAME = philo
+NAME = philo_bonus
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -pthread
-
+CFLAGS = -Wall -Wextra -Werror 
 SRC = philo.c utils.c parse.c
-
 OBJ = $(SRC:.c=.o)
-
-HEADER = philo_bonus.h
-
 DEPS = $(OBJ:.o=.d)
 
 all: $(NAME)
@@ -15,7 +10,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
-%.o: %.c $(HEADER)
+%.o: %.c philo_bonus.h
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
