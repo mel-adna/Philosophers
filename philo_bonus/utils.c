@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/24 11:08:38 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/24 11:08:39 by mel-adna         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo_bonus.h"
 
 uint64_t	get_time(void)
@@ -24,9 +36,23 @@ void	print_status(t_philo *philo, char *status)
 
 	args = philo->args;
 	sem_wait(args->print_lock);
-	printf("%lld %d %s\n", (get_time() - args->start_time),
-		philo->id, status);
+	printf("%lld %d %s\n", (get_time() - args->start_time), philo->id, status);
 	sem_post(args->print_lock);
+}
+
+void	cleanning(t_args *args)
+{
+	sem_close(args->forks);
+	sem_close(args->print_lock);
+	sem_close(args->stop_sim);
+	sem_close(args->meal_gate);
+	sem_close(args->lock);
+	sem_unlink("/forks");
+	sem_unlink("/print_lock");
+	sem_unlink("/stop_sim");
+	sem_unlink("/meal_gate");
+	sem_unlink("/lock");
+	free(args->pids);
 }
 
 int	ft_atoi(const char *str)

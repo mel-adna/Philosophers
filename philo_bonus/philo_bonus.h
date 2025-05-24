@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_bonus.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mel-adna <mel-adna@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/24 11:08:29 by mel-adna          #+#    #+#             */
+/*   Updated: 2025/05/24 11:08:30 by mel-adna         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_BONUS_H
 # define PHILO_BONUS_H
 
@@ -43,4 +55,6 @@ uint64_t		get_time(void);
 void			my_usleep(uint64_t time_in_ms, t_philo *philo);
 int				init_sems(t_args *args);
 void			print_status(t_philo *philo, char *status);
+void			cleanning(t_args *args);
+void			philo_children(t_args *args, pid_t *pids, t_philo *philos);
 #endif

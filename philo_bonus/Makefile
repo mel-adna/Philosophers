@@ -1,7 +1,7 @@
 NAME = philo_bonus
 CC = cc
 CFLAGS = -Wall -Wextra -Werror 
-SRC = philo.c utils.c parse.c
+SRC = philo.c utils.c parse.c simulation.c
 OBJ = $(SRC:.c=.o)
 DEPS = $(OBJ:.o=.d)
 
